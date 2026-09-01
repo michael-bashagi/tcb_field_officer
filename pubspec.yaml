@@ -1,0 +1,61 @@
+name: tcb_field_officer
+description: "A mobile application for Tanzania Cotton Board (TCB) Field Officers to register farmers, demarcate farm boundaries, and generate billing control numbers."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # dependencies 4 State Management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # dependencies 4 Drift Database for Caching API responses & GPS Polygons
+  drift: ^2.34.3
+  sqlite3_flutter_libs: ^0.5.20
+  path_provider: ^2.1.2
+  path: ^1.9.0
+
+  # dependency 4 Secure Storage for Auth Tokens
+  flutter_secure_storage: ^10.3.1
+
+  # dependency 4 Navigation
+  go_router: ^13.2.0
+
+  # dependency 4 Networking (GraphQL backend)
+  dio: ^5.4.1
+  crypto: ^3.0.7
+
+  # dependency 4 OAuth2 Authorization Code + PKCE login flow
+  flutter_web_auth_2: ^5.1.0
+
+  # dependencies 4 Location, GPS Demarcation & Perimeter Math
+  geolocator: ^11.0.0
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.0
+  turf: ^0.0.9 # Area/Acreage math calculation
+  intl: ^0.20.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+  # dependencies 4 Code Generators for Drift
+  build_runner: ^2.16.0
+  drift_dev: ^2.34.5
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
