@@ -1,7 +1,7 @@
 class ApiEndpoints {
   ApiEndpoints._();
 
-  static const String baseUrl = 'http://10.1.1.228:9090';
+  static const String baseUrl = 'http://169.58.109.40';
   static const String graphql = '/graphql';
 
   static const String principal = '/principal';
