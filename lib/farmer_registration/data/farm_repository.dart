@@ -9,10 +9,10 @@ import '../domain/farm.dart';
 import '../domain/farmer_request.dart';
 import '../domain/named_ref.dart';
 
-const String _getAllSubWardsQuery = r'''
-  query GetAllSubWards($pageableParam: PageableParamInput) {
-    getSubWardsPageable(active: true, pageableParam: $pageableParam) {
-      content { uid name }
+const String _getAssignedSubWardsQuery = r'''
+  query GetAssignedSubWards($pageableParam: PageableParamInput) {
+    getFieldOfficerSubWardsPageable(active: true, pageableParam: $pageableParam) {
+      content { subWard { uid name } }
     }
   }
 ''';
@@ -36,14 +36,6 @@ const String _getDistrictsQuery = r'''
 const String _getWardsQuery = r'''
   query GetWards($districtUid: String, $pageableParam: PageableParamInput) {
     getWardsPageable(active: true, districtUid: $districtUid, pageableParam: $pageableParam) {
-      content { uid name }
-    }
-  }
-''';
-
-const String _getSubWardsQuery = r'''
-  query GetSubWards($wardUid: String, $pageableParam: PageableParamInput) {
-    getSubWardsPageable(active: true, wardUid: $wardUid, pageableParam: $pageableParam) {
       content { uid name }
     }
   }
@@ -120,8 +112,22 @@ class FarmRepository {
   })  : _graphQLClient = graphQLClient,
         _database = database;
 
-  Future<List<NamedRef>> getAssignmentSubWards() {
-    return _fetchNamedRefs(_getAllSubWardsQuery, 'getSubWardsPageable', {});
+  Future<List<NamedRef>> getAssignedSubWards() async {
+    final data = await _graphQLClient.request(
+      _getAssignedSubWardsQuery,
+      variables: {
+        'pageableParam': {'size': 200},
+      },
+    );
+    final page =
+        data['getFieldOfficerSubWardsPageable'] as Map<String, dynamic>?;
+    final content = page?['content'] as List<dynamic>? ?? const [];
+    return content
+        .cast<Map<String, dynamic>>()
+        .map((e) => e['subWard'] as Map<String, dynamic>?)
+        .whereType<Map<String, dynamic>>()
+        .map(NamedRef.fromJson)
+        .toList();
   }
 
   Future<List<NamedRef>> getRegions() {
@@ -141,14 +147,6 @@ class FarmRepository {
       _getWardsQuery,
       'getWardsPageable',
       {'districtUid': districtUid},
-    );
-  }
-
-  Future<List<NamedRef>> getSubWards(String wardUid) {
-    return _fetchNamedRefs(
-      _getSubWardsQuery,
-      'getSubWardsPageable',
-      {'wardUid': wardUid},
     );
   }
 
@@ -173,14 +171,12 @@ class FarmRepository {
 
   Future<FarmerRequest> registerFarmerWithFarm({
     required FarmerRequest farmer,
-    required String agriculturalZoneUid,
     required String subWardUid,
   }) async {
     final farmerUid = await _createFarmer(farmer);
 
     final farmWithRefs = farmer.farm.copyWith(
       farmerUid: farmerUid,
-      agriculturalZoneUid: agriculturalZoneUid,
       subWardUid: subWardUid,
     );
     final createdFarm = await _createFarm(farmWithRefs);
@@ -292,7 +288,7 @@ final farmRepositoryProvider = Provider<FarmRepository>((ref) {
 });
 
 final assignmentSubWardsProvider = FutureProvider<List<NamedRef>>((ref) {
-  return ref.watch(farmRepositoryProvider).getAssignmentSubWards();
+  return ref.watch(farmRepositoryProvider).getAssignedSubWards();
 });
 
 final regionsProvider = FutureProvider<List<NamedRef>>((ref) {
@@ -307,9 +303,4 @@ final districtsProvider =
 final wardsProvider =
     FutureProvider.family<List<NamedRef>, String>((ref, districtUid) {
   return ref.watch(farmRepositoryProvider).getWards(districtUid);
-});
-
-final subWardsProvider =
-    FutureProvider.family<List<NamedRef>, String>((ref, wardUid) {
-  return ref.watch(farmRepositoryProvider).getSubWards(wardUid);
 });

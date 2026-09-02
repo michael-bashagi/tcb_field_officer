@@ -40,7 +40,6 @@ class Farm {
   final List<BoundaryPoint> boundaryPoints;
 
   final String? farmerUid;
-  final String? agriculturalZoneUid;
   final String? subWardUid;
 
   const Farm({
@@ -51,7 +50,6 @@ class Farm {
     required this.locationFromGeospatial,
     this.boundaryPoints = const [],
     this.farmerUid,
-    this.agriculturalZoneUid,
     this.subWardUid,
   });
 
@@ -71,9 +69,7 @@ class Farm {
   String? toGeoJson() {
     if (boundaryPoints.length < minRingPositions - 1) return null;
 
-    final ring = boundaryPoints
-        .map((p) => [p.longitude, p.latitude])
-        .toList();
+    final ring = boundaryPoints.map((p) => [p.longitude, p.latitude]).toList();
     final first = ring.first;
     final last = ring.last;
     if (first[0] != last[0] || first[1] != last[1]) {
@@ -102,7 +98,6 @@ class Farm {
       if (uid != null) 'uid': uid,
       'name': locationFromGeospatial,
       if (geoJson != null) 'geoJson': geoJson,
-      'agriculturalZoneUid': agriculturalZoneUid,
       'subWardUid': subWardUid,
     };
   }
@@ -110,7 +105,6 @@ class Farm {
   Farm copyWith({
     String? uid,
     String? farmerUid,
-    String? agriculturalZoneUid,
     String? subWardUid,
   }) {
     return Farm(
@@ -121,7 +115,6 @@ class Farm {
       locationFromGeospatial: locationFromGeospatial,
       boundaryPoints: boundaryPoints,
       farmerUid: farmerUid ?? this.farmerUid,
-      agriculturalZoneUid: agriculturalZoneUid ?? this.agriculturalZoneUid,
       subWardUid: subWardUid ?? this.subWardUid,
     );
   }

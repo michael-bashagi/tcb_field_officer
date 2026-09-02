@@ -52,7 +52,6 @@ class _FarmerRegistrationBottomSheetState
   NamedRef? _selectedRegion;
   NamedRef? _selectedDistrict;
   NamedRef? _selectedWard;
-  NamedRef? _selectedSubWard;
 
   bool _isSubmitting = false;
 
@@ -99,18 +98,10 @@ class _FarmerRegistrationBottomSheetState
     }
     if (_selectedAssignmentSubWard == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Please select the farm\'s subward.')),
+        const SnackBar(content: Text('Please select the farm\'s subward.')),
       );
       return;
     }
-    if (_selectedSubWard == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select the farm\'s sub-ward.')),
-      );
-      return;
-    }
-
     final officerName = ref.read(currentOfficerProvider)?.name ?? '';
     final request = FarmerRequest(
       firstName: _capitalize(_firstNameController.text.trim()),
@@ -126,8 +117,7 @@ class _FarmerRegistrationBottomSheetState
       final registered =
           await ref.read(farmRepositoryProvider).registerFarmerWithFarm(
                 farmer: request,
-                agriculturalZoneUid: _selectedAssignmentSubWard!.uid,
-                subWardUid: _selectedSubWard!.uid,
+                subWardUid: _selectedAssignmentSubWard!.uid,
               );
       ref.invalidate(homeMetricsProvider);
       ref.invalidate(myFarmersProvider);
@@ -215,9 +205,6 @@ class _FarmerRegistrationBottomSheetState
     final wardsAsync = _selectedDistrict == null
         ? null
         : ref.watch(wardsProvider(_selectedDistrict!.uid));
-    final subWardsAsync = _selectedWard == null
-        ? null
-        : ref.watch(subWardsProvider(_selectedWard!.uid));
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -316,7 +303,6 @@ class _FarmerRegistrationBottomSheetState
                     _selectedRegion = region;
                     _selectedDistrict = null;
                     _selectedWard = null;
-                    _selectedSubWard = null;
                   }),
                 ),
                 const SizedBox(height: 10),
@@ -329,7 +315,6 @@ class _FarmerRegistrationBottomSheetState
                         onChanged: (district) => setState(() {
                           _selectedDistrict = district;
                           _selectedWard = null;
-                          _selectedSubWard = null;
                         }),
                       ),
                 const SizedBox(height: 10),
@@ -339,20 +324,8 @@ class _FarmerRegistrationBottomSheetState
                         label: 'Ward',
                         asyncItems: wardsAsync,
                         value: _selectedWard,
-                        onChanged: (ward) => setState(() {
-                          _selectedWard = ward;
-                          _selectedSubWard = null;
-                        }),
-                      ),
-                const SizedBox(height: 10),
-                subWardsAsync == null
-                    ? _buildDisabledField('Select a ward first')
-                    : _buildNamedRefDropdown(
-                        label: 'Sub-Ward',
-                        asyncItems: subWardsAsync,
-                        value: _selectedSubWard,
-                        onChanged: (subWard) =>
-                            setState(() => _selectedSubWard = subWard),
+                        onChanged: (ward) =>
+                            setState(() => _selectedWard = ward),
                       ),
                 const SizedBox(height: 20),
                 const Text(
@@ -371,22 +344,29 @@ class _FarmerRegistrationBottomSheetState
                     'Failed to load subwards: $error',
                     style: const TextStyle(color: Colors.red),
                   ),
-                  data: (subWards) => DropdownButtonFormField<NamedRef>(
-                    initialValue: _selectedAssignmentSubWard,
-                    hint: const Text('Select subward'),
-                    isExpanded: true,
-                    decoration:
-                        const InputDecoration(border: OutlineInputBorder()),
-                    items: subWards.map((subWard) {
-                      return DropdownMenuItem<NamedRef>(
-                        value: subWard,
-                        child: Text(subWard.name),
-                      );
-                    }).toList(),
-                    onChanged: (subWard) => setState(
-                        () => _selectedAssignmentSubWard = subWard),
-                    validator: (value) => value == null ? 'Required' : null,
-                  ),
+                  data: (subWards) => subWards.isEmpty
+                      ? const Text(
+                          'No subward is assigned to your account yet. '
+                          'Contact your supervisor to get one assigned.',
+                          style: TextStyle(color: Colors.red),
+                        )
+                      : DropdownButtonFormField<NamedRef>(
+                          initialValue: _selectedAssignmentSubWard,
+                          hint: const Text('Select subward'),
+                          isExpanded: true,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder()),
+                          items: subWards.map((subWard) {
+                            return DropdownMenuItem<NamedRef>(
+                              value: subWard,
+                              child: Text(subWard.name),
+                            );
+                          }).toList(),
+                          onChanged: (subWard) => setState(
+                              () => _selectedAssignmentSubWard = subWard),
+                          validator: (value) =>
+                              value == null ? 'Required' : null,
+                        ),
                 ),
                 const SizedBox(height: 12),
                 if (_demarcatedFarm != null)
