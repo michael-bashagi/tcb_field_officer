@@ -41,7 +41,6 @@ class Farm {
 
   final String? farmerUid;
   final String? agriculturalZoneUid;
-  final String? agriculturalZoneName;
   final String? subWardUid;
 
   const Farm({
@@ -53,12 +52,10 @@ class Farm {
     this.boundaryPoints = const [],
     this.farmerUid,
     this.agriculturalZoneUid,
-    this.agriculturalZoneName,
     this.subWardUid,
   });
 
   factory Farm.fromJson(Map<String, dynamic> json) {
-    final zone = json['agriculturalZone'] as Map<String, dynamic>?;
     final subWard = json['subWard'] as Map<String, dynamic>?;
     return Farm(
       uid: json['uid'] as String?,
@@ -67,8 +64,6 @@ class Farm {
       latitude: 0.0,
       longitude: 0.0,
       locationFromGeospatial: json['name'] as String? ?? 'Unknown Location',
-      agriculturalZoneUid: zone?['uid'] as String?,
-      agriculturalZoneName: zone?['name'] as String?,
       subWardUid: subWard?['uid'] as String?,
     );
   }
@@ -116,7 +111,6 @@ class Farm {
     String? uid,
     String? farmerUid,
     String? agriculturalZoneUid,
-    String? agriculturalZoneName,
     String? subWardUid,
   }) {
     return Farm(
@@ -128,7 +122,6 @@ class Farm {
       boundaryPoints: boundaryPoints,
       farmerUid: farmerUid ?? this.farmerUid,
       agriculturalZoneUid: agriculturalZoneUid ?? this.agriculturalZoneUid,
-      agriculturalZoneName: agriculturalZoneName ?? this.agriculturalZoneName,
       subWardUid: subWardUid ?? this.subWardUid,
     );
   }
