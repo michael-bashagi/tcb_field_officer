@@ -47,7 +47,7 @@ class _FarmerRegistrationBottomSheetState
   final _phoneController = TextEditingController();
 
   Farm? _demarcatedFarm;
-  NamedRef? _selectedCottonDistrict;
+  NamedRef? _selectedAssignmentSubWard;
 
   NamedRef? _selectedRegion;
   NamedRef? _selectedDistrict;
@@ -97,10 +97,10 @@ class _FarmerRegistrationBottomSheetState
       );
       return;
     }
-    if (_selectedCottonDistrict == null) {
+    if (_selectedAssignmentSubWard == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Please select the farm\'s cotton district.')),
+            content: Text('Please select the farm\'s subward.')),
       );
       return;
     }
@@ -126,7 +126,7 @@ class _FarmerRegistrationBottomSheetState
       final registered =
           await ref.read(farmRepositoryProvider).registerFarmerWithFarm(
                 farmer: request,
-                agriculturalZoneUid: _selectedCottonDistrict!.uid,
+                agriculturalZoneUid: _selectedAssignmentSubWard!.uid,
                 subWardUid: _selectedSubWard!.uid,
               );
       ref.invalidate(homeMetricsProvider);
@@ -207,7 +207,7 @@ class _FarmerRegistrationBottomSheetState
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF2C5F2D);
-    final cottonDistrictsAsync = ref.watch(cottonDistrictsProvider);
+    final assignmentSubWardsAsync = ref.watch(assignmentSubWardsProvider);
     final regionsAsync = ref.watch(regionsProvider);
     final districtsAsync = _selectedRegion == null
         ? null
@@ -360,7 +360,7 @@ class _FarmerRegistrationBottomSheetState
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
-                cottonDistrictsAsync.when(
+                assignmentSubWardsAsync.when(
                   loading: () => const Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 12),
@@ -368,23 +368,23 @@ class _FarmerRegistrationBottomSheetState
                     ),
                   ),
                   error: (error, stackTrace) => Text(
-                    'Failed to load cotton districts: $error',
+                    'Failed to load subwards: $error',
                     style: const TextStyle(color: Colors.red),
                   ),
-                  data: (districts) => DropdownButtonFormField<NamedRef>(
-                    initialValue: _selectedCottonDistrict,
-                    hint: const Text('Select cotton district'),
+                  data: (subWards) => DropdownButtonFormField<NamedRef>(
+                    initialValue: _selectedAssignmentSubWard,
+                    hint: const Text('Select subward'),
                     isExpanded: true,
                     decoration:
                         const InputDecoration(border: OutlineInputBorder()),
-                    items: districts.map((district) {
+                    items: subWards.map((subWard) {
                       return DropdownMenuItem<NamedRef>(
-                        value: district,
-                        child: Text(district.name),
+                        value: subWard,
+                        child: Text(subWard.name),
                       );
                     }).toList(),
-                    onChanged: (district) =>
-                        setState(() => _selectedCottonDistrict = district),
+                    onChanged: (subWard) => setState(
+                        () => _selectedAssignmentSubWard = subWard),
                     validator: (value) => value == null ? 'Required' : null,
                   ),
                 ),

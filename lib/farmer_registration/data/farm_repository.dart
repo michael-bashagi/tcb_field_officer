@@ -9,10 +9,10 @@ import '../domain/farm.dart';
 import '../domain/farmer_request.dart';
 import '../domain/named_ref.dart';
 
-const String _getCottonDistrictsQuery = r'''
-  query GetCottonDistricts($pageableParam: PageableParamInput) {
-    getDistrictsPageable(active: true, pageableParam: $pageableParam) {
-      content { uid name cottonDistrict }
+const String _getAllSubWardsQuery = r'''
+  query GetAllSubWards($pageableParam: PageableParamInput) {
+    getSubWardsPageable(active: true, pageableParam: $pageableParam) {
+      content { uid name }
     }
   }
 ''';
@@ -120,20 +120,8 @@ class FarmRepository {
   })  : _graphQLClient = graphQLClient,
         _database = database;
 
-  Future<List<NamedRef>> getCottonDistricts() async {
-    final data = await _graphQLClient.request(
-      _getCottonDistrictsQuery,
-      variables: {
-        'pageableParam': {'size': 200},
-      },
-    );
-    final page = data['getDistrictsPageable'] as Map<String, dynamic>?;
-    final content = page?['content'] as List<dynamic>? ?? const [];
-    return content
-        .cast<Map<String, dynamic>>()
-        .where((e) => e['cottonDistrict'] == true)
-        .map(NamedRef.fromJson)
-        .toList();
+  Future<List<NamedRef>> getAssignmentSubWards() {
+    return _fetchNamedRefs(_getAllSubWardsQuery, 'getSubWardsPageable', {});
   }
 
   Future<List<NamedRef>> getRegions() {
@@ -303,8 +291,8 @@ final farmRepositoryProvider = Provider<FarmRepository>((ref) {
   );
 });
 
-final cottonDistrictsProvider = FutureProvider<List<NamedRef>>((ref) {
-  return ref.watch(farmRepositoryProvider).getCottonDistricts();
+final assignmentSubWardsProvider = FutureProvider<List<NamedRef>>((ref) {
+  return ref.watch(farmRepositoryProvider).getAssignmentSubWards();
 });
 
 final regionsProvider = FutureProvider<List<NamedRef>>((ref) {
