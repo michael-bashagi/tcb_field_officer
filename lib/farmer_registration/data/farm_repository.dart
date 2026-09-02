@@ -5,15 +5,14 @@ import '../../core/network/graphql_client.dart';
 import '../../core/network/network_providers.dart';
 import '../../database/app_database.dart';
 import '../../main.dart';
-import '../domain/agricultural_zone.dart';
 import '../domain/farm.dart';
 import '../domain/farmer_request.dart';
 import '../domain/named_ref.dart';
 
-const String _getZonesQuery = r'''
-  query GetAgriculturalZones($pageableParam: PageableParamInput) {
-    getAgriculturalZonesPageable(active: true, pageableParam: $pageableParam) {
-      content { uid name }
+const String _getCottonDistrictsQuery = r'''
+  query GetCottonDistricts($pageableParam: PageableParamInput) {
+    getDistrictsPageable(active: true, pageableParam: $pageableParam) {
+      content { uid name cottonDistrict }
     }
   }
 ''';
@@ -121,17 +120,19 @@ class FarmRepository {
   })  : _graphQLClient = graphQLClient,
         _database = database;
 
-  Future<List<AgriculturalZone>> getAgriculturalZones() async {
+  Future<List<NamedRef>> getCottonDistricts() async {
     final data = await _graphQLClient.request(
-      _getZonesQuery,
+      _getCottonDistrictsQuery,
       variables: {
         'pageableParam': {'size': 200},
       },
     );
-    final page = data['getAgriculturalZonesPageable'] as Map<String, dynamic>?;
+    final page = data['getDistrictsPageable'] as Map<String, dynamic>?;
     final content = page?['content'] as List<dynamic>? ?? const [];
     return content
-        .map((e) => AgriculturalZone.fromJson(e as Map<String, dynamic>))
+        .cast<Map<String, dynamic>>()
+        .where((e) => e['cottonDistrict'] == true)
+        .map(NamedRef.fromJson)
         .toList();
   }
 
@@ -302,9 +303,8 @@ final farmRepositoryProvider = Provider<FarmRepository>((ref) {
   );
 });
 
-final existingAgriculturalZonesProvider =
-    FutureProvider<List<AgriculturalZone>>((ref) {
-  return ref.watch(farmRepositoryProvider).getAgriculturalZones();
+final cottonDistrictsProvider = FutureProvider<List<NamedRef>>((ref) {
+  return ref.watch(farmRepositoryProvider).getCottonDistricts();
 });
 
 final regionsProvider = FutureProvider<List<NamedRef>>((ref) {

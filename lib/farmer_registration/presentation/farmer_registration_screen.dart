@@ -6,7 +6,6 @@ import '../../features/auth/presentation/controllers/auth_provider.dart';
 import '../../features/home/presentation/home_providers.dart';
 import '../../routing/app_router.dart';
 import '../data/farm_repository.dart';
-import '../domain/agricultural_zone.dart';
 import '../domain/farm.dart';
 import '../domain/farmer_request.dart';
 import '../domain/named_ref.dart';
@@ -48,7 +47,7 @@ class _FarmerRegistrationBottomSheetState
   final _phoneController = TextEditingController();
 
   Farm? _demarcatedFarm;
-  AgriculturalZone? _selectedZone;
+  NamedRef? _selectedCottonDistrict;
 
   NamedRef? _selectedRegion;
   NamedRef? _selectedDistrict;
@@ -98,10 +97,10 @@ class _FarmerRegistrationBottomSheetState
       );
       return;
     }
-    if (_selectedZone == null) {
+    if (_selectedCottonDistrict == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('Please select the farm\'s agricultural zone.')),
+            content: Text('Please select the farm\'s cotton district.')),
       );
       return;
     }
@@ -127,7 +126,7 @@ class _FarmerRegistrationBottomSheetState
       final registered =
           await ref.read(farmRepositoryProvider).registerFarmerWithFarm(
                 farmer: request,
-                agriculturalZoneUid: _selectedZone!.uid,
+                agriculturalZoneUid: _selectedCottonDistrict!.uid,
                 subWardUid: _selectedSubWard!.uid,
               );
       ref.invalidate(homeMetricsProvider);
@@ -208,7 +207,7 @@ class _FarmerRegistrationBottomSheetState
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF2C5F2D);
-    final zonesAsync = ref.watch(existingAgriculturalZonesProvider);
+    final cottonDistrictsAsync = ref.watch(cottonDistrictsProvider);
     final regionsAsync = ref.watch(regionsProvider);
     final districtsAsync = _selectedRegion == null
         ? null
@@ -361,7 +360,7 @@ class _FarmerRegistrationBottomSheetState
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const SizedBox(height: 8),
-                zonesAsync.when(
+                cottonDistrictsAsync.when(
                   loading: () => const Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 12),
@@ -369,22 +368,23 @@ class _FarmerRegistrationBottomSheetState
                     ),
                   ),
                   error: (error, stackTrace) => Text(
-                    'Failed to load agricultural zones: $error',
+                    'Failed to load cotton districts: $error',
                     style: const TextStyle(color: Colors.red),
                   ),
-                  data: (zones) => DropdownButtonFormField<AgriculturalZone>(
-                    initialValue: _selectedZone,
-                    hint: const Text('Select agricultural zone'),
+                  data: (districts) => DropdownButtonFormField<NamedRef>(
+                    initialValue: _selectedCottonDistrict,
+                    hint: const Text('Select cotton district'),
                     isExpanded: true,
                     decoration:
                         const InputDecoration(border: OutlineInputBorder()),
-                    items: zones.map((zone) {
-                      return DropdownMenuItem<AgriculturalZone>(
-                        value: zone,
-                        child: Text(zone.name),
+                    items: districts.map((district) {
+                      return DropdownMenuItem<NamedRef>(
+                        value: district,
+                        child: Text(district.name),
                       );
                     }).toList(),
-                    onChanged: (zone) => setState(() => _selectedZone = zone),
+                    onChanged: (district) =>
+                        setState(() => _selectedCottonDistrict = district),
                     validator: (value) => value == null ? 'Required' : null,
                   ),
                 ),

@@ -14,7 +14,6 @@ const String _mySeasonFarmFarmersQuery = r'''
           uid
           name
           size
-          agriculturalZone { uid name }
           subWard { uid name }
         }
         farmer { uid name email phone }

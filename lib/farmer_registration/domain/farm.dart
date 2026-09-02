@@ -77,7 +77,7 @@ class Farm {
     if (boundaryPoints.length < minRingPositions - 1) return null;
 
     final ring = boundaryPoints
-        .map((p) => [p.longitude, p.latitude, p.altitude])
+        .map((p) => [p.longitude, p.latitude])
         .toList();
     final first = ring.first;
     final last = ring.last;

@@ -1,0 +1,2662 @@
+"""Exposes a URL that specifies the behaviour of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behaviour of this scalar."""
+  url: String!
+) on SCALAR
+
+"""Indicates an Input Object is a OneOf Input Object."""
+directive @oneOf on INPUT_OBJECT
+
+"""This directive allows results to be deferred during execution"""
+directive @defer(
+  """Deferred behaviour is controlled by this argument"""
+  if: Boolean! = true
+
+  """A unique label that represents the fragment being deferred"""
+  label: String
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""
+This directive disables error propagation when a non nullable field returns null for the given operation.
+"""
+directive @experimental_disableErrorPropagation on QUERY | MUTATION | SUBSCRIPTION
+
+input AssignTractorToSeasonFarmFarmerDtoInput {
+  commentToDriver: String!
+  cultivationDate: LocalDate!
+  tractorUid: String!
+}
+
+type Attachment {
+  active: Boolean
+  attachment: String
+  attachmentTitle: String
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  extraIdentifier: String
+  filePath: String
+  id: Long
+  isDeleted: Boolean
+  mediaSize: String
+  mediaType: String
+  migrated: Boolean
+  model: String
+  sourceId: String
+  sourceName: AttachmentSourceNameEnum
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input AttachmentDtoInput {
+  attachmentTitle: String
+  data: String
+  dataBinary: String
+  filePath: String
+  fullPath: String
+  id: Long
+  mediaSize: String
+  mediaType: String
+  sourceId: String
+  sourceName: AttachmentSourceNameEnum
+  uid: String
+}
+
+enum AttachmentSourceNameEnum {
+  OTHERS
+  PROFILE_PHOTO
+}
+
+enum AuthenticationMethod {
+  DB
+  LDAP
+}
+
+"""Base64-encoded binary"""
+scalar Base64String
+
+"""An arbitrary precision signed decimal"""
+scalar BigDecimal
+
+type Bill {
+  active: Boolean
+  billAmount: BigDecimal
+  billApprBy: String
+  billDesc: String
+  billEqvAmount: BigDecimal
+  billExprDate: LocalDateTime
+  billGenBy: String
+  billGenDate: LocalDateTime
+  billId: String
+  billItems: [BillItem]
+  billPaidAmount: BigDecimal
+  billPayOpt: Int
+  billStatusCode: String
+  billStatusDesc: String
+  billType: BillTypeEnum
+  cancellation: BillCancellation
+  collPsp: String
+  collectionCentreCode: String
+  controlNumber: String
+  createdAt: LocalDateTime
+  createdBy: User
+  currency: CurrencyEnum
+  customerAccount: String
+  customerCellNumber: String
+  customerEmail: String
+  customerId: String
+  customerIdType: String
+  customerName: String
+  customerTin: String
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  exchRate: BigDecimal
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  minPayAmount: BigDecimal
+  oldBillAmount: BigDecimal
+  paidAt: LocalDateTime
+  payLimitationAmount: BigDecimal
+  payLimitationType: Int
+  payPlan: Int
+  paymentStatus: BillPaymentStatus
+  payments: [BillPayment]
+  reuseBillId: String
+  spCode: String
+  systemId: String
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+type BillCancellation {
+  active: Boolean
+  approvedBy: User
+  bill: Bill
+  billType: Int
+  cancellationReason: String
+  cancellationStatus: ProcessStatusEnum
+  cancelledBy: User
+  controlNumber: String
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  grpBillId: String
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  rejectReason: String
+  rejectedBy: User
+  requestId: String
+  spGrpCode: String
+  sysCode: String
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input BillCancellationApprovalDTOInput {
+  cancellationStatus: ProcessStatusEnum!
+  reason: String!
+  uid: String!
+}
+
+input BillCancellationDTOInput {
+  billUid: String
+  canclReasn: String
+}
+
+input BillChangeDTOInput {
+  billUid: String!
+  customerPhoneNumber: String
+  daysToLive: Long!
+  reason: String!
+}
+
+input BillFilterDTOInput {
+  controlNumber: String
+  customerName: String
+  endDate: String
+  paymentStatus: BillPaymentStatus
+  startDate: String
+}
+
+type BillItem {
+  active: Boolean
+  bill: Bill
+  billItemAmount: BigDecimal
+  billItemEqvAmount: BigDecimal
+  billItemRef: String
+  collSp: String
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  gfsCode: String
+  gfsDescription: String
+  id: Long
+  institutionName: String
+  isDeleted: Boolean
+  migrated: Boolean
+  refBillId: String
+  subSpCode: String
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+  useItemRefOnPay: String
+}
+
+input BillItemDTOInput {
+  billItemAmount: BigDecimal
+  billItemEqvAmount: BigDecimal
+  gfsCode: String!
+  gfsDescription: String!
+  subSpCode: String
+  uid: String
+}
+
+type BillPayment {
+  active: Boolean
+  bill: Bill
+  billAmount: BigDecimal
+  billid: String
+  collectionAccountNumber: String
+  controlNumber: String
+  createdAt: LocalDateTime
+  createdBy: User
+  currency: String
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  paidAmount: BigDecimal
+  payRefId: String
+  payerCellNumber: String
+  payerEmail: String
+  payerName: String
+  paymentDate: LocalDate
+  pspCode: String
+  pspName: String
+  qtRefId: String
+  receiptNumber: String
+  reconciled: Boolean
+  transactionDatetime: LocalDateTime
+  trdPtyTrxId: String
+  trxId: String
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+  usdPayChnl: PaymentChannelEnum
+}
+
+enum BillPaymentStatus {
+  CANCELLED
+  EXPIRED
+  PAID
+  PARTIAL
+  PENDING
+  UNPAID
+}
+
+input BillReUseDTOInput {
+  billedAmount: BigDecimal!
+  controlNumber: String!
+  daysToLive: Long!
+  minimumPaymentAmount: BigDecimal!
+  reUseReason: String!
+}
+
+enum BillTypeEnum {
+  CULTIVATION
+  OTHER_INVOICE
+}
+
+input ChangePasswordDtoInput {
+  confirmPassword: String
+  newPassword: String
+  previousPassword: String
+}
+
+input ChangeUserInfoDtoInput {
+  email: String
+  password: String
+  phone: String
+}
+
+type Council {
+  active: Boolean
+  code: String
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  district: District
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  napaId: Long
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input CouncilInput {
+  code: String
+  district: DistrictInput
+  id: Long
+  name: String
+  napaId: Long
+  uid: String
+}
+
+type CultivationLog {
+  active: Boolean
+  areaHectares: Float
+  areaM2: Float
+  createdAt: LocalDateTime
+  createdBy: User
+  cultivationSeason: CultivationSeason
+  date: LocalDate
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  farmer: Farmer
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  tractor: Tractor
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+type CultivationPayment {
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  description: String
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input CultivationPaymentDtoInput {
+  description: String
+  name: String!
+  paymentDefinitionUid: String!
+  uid: String
+}
+
+type CultivationSeason {
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  current: Boolean!
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  endDate: LocalDate
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  notes: String
+  startDate: LocalDate
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input CultivationSeasonDtoInput {
+  endDate: LocalDate!
+  name: String!
+  notes: String
+  startDate: LocalDate!
+  uid: String
+}
+
+enum CurrencyEnum {
+  TZS
+  USD
+}
+
+type Department {
+  active: Boolean
+  code: String!
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String!
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input DepartmentDtoInput {
+  code: String!
+  name: String!
+  uid: String
+}
+
+input DepartmentInput {
+  code: String!
+  id: Long
+  name: String!
+  uid: String
+}
+
+type Designation {
+  active: Boolean
+  code: String!
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  title: String!
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input DesignationDtoInput {
+  code: String!
+  title: String!
+  uid: String
+}
+
+input DesignationInput {
+  code: String!
+  id: Long
+  title: String!
+  uid: String
+}
+
+enum Direction {
+  ASC
+  DESC
+}
+
+type District {
+  active: Boolean
+  code: String
+  cottonDistrict: Boolean
+  councils: [Council]
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  napaId: Long
+  region: Region
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+  wards: [Ward]
+}
+
+input DistrictDtoInput {
+  code: String
+  name: String
+  regionUid: String
+  uid: String
+}
+
+input DistrictInput {
+  code: String
+  cottonDistrict: Boolean
+  councils: [CouncilInput]
+  id: Long
+  name: String
+  napaId: Long
+  region: RegionInput
+  uid: String
+  wards: [WardInput]
+}
+
+type Farm {
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  geoJson: String
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  notes: String
+  size: Float
+  subWard: SubWard
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+type FarmCoordinate {
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  farm: Farm
+  id: Long
+  isDeleted: Boolean
+  latitude: Float
+  longitude: Float
+  migrated: Boolean
+  sequenceNumber: Int
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input FarmCoordinateDtoInput {
+  farmUid: String!
+  latitude: Float!
+  longitude: Float!
+  sequenceNumber: Int
+  uid: String
+}
+
+enum FarmCultivationStatus {
+  CANCELLED
+  COMPLETED
+  IN_PROGRESS
+  PENDING
+}
+
+input FarmDtoInput {
+  agriculturalZoneUid: String!
+  geoJson: String
+  name: String!
+  notes: String
+  subWardUid: String!
+  uid: String
+}
+
+type Farmer {
+  accountNo: String
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  district: District
+  email: String
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  phone: String
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input FarmerDtoInput {
+  email: String
+  name: String!
+  phone: String!
+  uid: String
+}
+
+type FieldOfficerSubWard {
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  fieldOfficer: User
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  subWard: SubWard
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input FieldOfficerSubWardDtoInput {
+  fieldOfficerUid: String!
+  subWardUid: String!
+  uid: String
+}
+
+input FieldOfficerSubWardInput {
+  fieldOfficer: UserInput
+  id: Long
+  subWard: SubWardInput
+  uid: String
+}
+
+input FieldOfficerSubWardsDtoInput {
+  fieldOfficerUid: String!
+  subWardUids: [String!]!
+}
+
+type GrantedAuthority {
+  authority: String
+}
+
+"""Built-in scalar representing a local date"""
+scalar LocalDate
+
+"""Built-in scalar representing a local date-time"""
+scalar LocalDateTime
+
+"""A 64-bit signed integer"""
+scalar Long
+
+input MailAttachmentDtoInput {
+  contentType: String
+  data: Base64String
+  fileName: String
+}
+
+"""Mutation root"""
+type Mutation {
+  """
+  Create or update a system setting (upsert by key) — Requires: ROLE_MANAGE_SYSTEM_SETTING
+  """
+  saveSystemSetting(dto: SystemSettingDtoInput): Response_SystemSetting
+
+  """Delete report actor | ROLE_DELETE_REPORT_ACTORS"""
+  deleteReportActor(uid: String!): Response_ReportActor
+
+  """Invite user by email — Requires: ROLE_MANAGE_USER"""
+  inviteUserByEmail(email: String): Response_Boolean
+  deleteDistrict(uid: String): Response_District
+
+  """ROLE_MANAGE_BILL"""
+  reRequestCancelledBill(billChangeDTO: BillChangeDTOInput!): Response_Bill
+
+  """Update permission details — Requires: ROLE_MANAGE_ROLE"""
+  updatePermissionDetails(dto: PermissionDtoInput!): Response_Permission
+  seedSubWardFromNAPA: Boolean
+  seedSubWardByRegionFromNAPA(id: Long): Boolean
+
+  """Reset Email of phone — Requires: ROLE_VIEW_USER"""
+  resetEmailOrPhone(uid: String, infoDto: ChangeUserInfoDtoInput): Response_User
+  createOrUpdateWard(dto: WardDtoInput): Response_Ward
+
+  """
+  Send a test email to the given address to confirm the mail configuration.
+  Returns success or the exact SMTP error. — Requires:
+  ROLE_MANAGE_SYSTEM_SETTING
+  """
+  sendTestEmail(email: String): Response_String
+  restoreFieldOfficerSubWard(uid: String): Response_FieldOfficerSubWard
+
+  """
+  Activate User | Permission: ROLE_DELETE_USER — Requires: ROLE_DELETE_USER
+  """
+  activateUser(uid: String): Response_User
+
+  """APPROVE_BILL_CANCELLATION | Approve a bill cancellation request"""
+  billCancelApprove(dto: BillCancellationApprovalDTOInput!): Response_BillCancellation
+
+  """Delete farmer | ROLE_MANAGE_FARMER"""
+  deleteFarmer(uid: String): Response_Farmer
+
+  """Soft-delete a system setting — Requires: ROLE_DELETE_SYSTEM_SETTING"""
+  deleteSystemSetting(uid: String): Response_SystemSetting
+  createOrUpdateFieldOfficerSubWard(dto: FieldOfficerSubWardDtoInput): Response_FieldOfficerSubWard
+
+  """Create or update report actor | ROLE_MANAGE_REPORT_ACTORS"""
+  createOrUpdateReportActor(input: ReportActorDtoInput!, templateUid: String!): Response_ReportActor
+
+  """ROLE_MANAGE_BILL"""
+  billChange(billChangeDTO: BillChangeDTOInput!): Response_Bill
+
+  """Create or update tractor operator | ROLE_MANAGE_TRACTOR_OPERATOR"""
+  createOrUpdateTractorOperator(dto: TractorOperatorDtoInput): Response_TractorOperator
+
+  """
+  Deleting role | Permissions: ROLE_DELETE_ROLE — Requires: ROLE_DELETE_ROLE
+  """
+  activateOrDeactivateRole(roleUid: String!): Response_Role
+
+  """Save user — Requires: ROLE_MANAGE_USER"""
+  saveUser(userDto: UserDtoInput): Response_User
+
+  """Delete tractor | ROLE_MANAGE_TRACTOR"""
+  deleteTractor(uid: String): Response_Tractor
+  createOrUpdateDistrict(dto: DistrictDtoInput): Response_District
+
+  """ROLE_DELETE_BILL_ITEM"""
+  deleteBillItem(uid: String!): Response_BillItem
+
+  """Delete farm | ROLE_MANAGE_FARM"""
+  deleteFarm(uid: String): Response_Farm
+
+  """ROLE_CANCEL_BILL | Request a bill cancellation"""
+  billCancelRequest(input: BillCancellationDTOInput!): Response_BillCancellation
+
+  """ROLE_MANAGE_CULTIVATION_PAYMENT"""
+  createOrUpdateCultivationPayment(dto: CultivationPaymentDtoInput!): Response_CultivationPayment
+  createOrUpdateCultivationSeason(dto: CultivationSeasonDtoInput): Response_CultivationSeason
+  seedSubWardByWard(uid: String): Boolean
+  restoreSeasonFarmFarmer(uid: String): Response_SeasonFarmFarmer
+
+  """
+  Create or update report template — Requires: ROLE_MANAGE_REPORT_TEMPLATE
+  """
+  saveReportTemplate(input: ReportTemplateDtoInput!): Response_ReportTemplate
+
+  """Delete report recipient | ROLE_DELETE_REPORT_RECIPIENTS"""
+  deleteReportRecipient(uid: String!): Response_ReportRecipient
+
+  """Soft-delete a department — Requires: ROLE_DELETE_DEPARTMENT"""
+  deleteDepartment(uid: String): Response_Department
+  createOrUpdateRegion(dto: RegionDtoInput): Response_Region
+
+  """Assign operator to tractor and preserve assignment history"""
+  assignOperatorToTractor(dto: TractorOperatorAssignmentDtoInput): Response_TractorOperatorAssignment
+
+  """ROLE_MANAGE_BILL_PAYMENT"""
+  simulatePayment(uid: String!): Response_BillPayment
+
+  """Create or update farm | ROLE_MANAGE_FARM"""
+  createOrUpdateFarm(dto: FarmDtoInput): Response_Farm
+  deleteCultivationSeason(uid: String): Response_CultivationSeason
+
+  """Reset user password — Requires: ROLE_MANAGE_USER"""
+  resetUserPassword(uid: String): Response_User
+
+  """Delete a farm coordinate | ROLE_MANAGE_FARM"""
+  deleteFarmCoordinate(uid: String): Response_FarmCoordinate
+  seedDistrictFromNAPA: Boolean
+
+  """Create or update a farm coordinate | ROLE_MANAGE_FARM"""
+  createOrUpdateFarmCoordinate(dto: FarmCoordinateDtoInput): Response_FarmCoordinate
+  seedRegionFromNAPA: Boolean
+
+  """
+  Force the in-memory settings cache to clear. Use after editing system_settings
+  directly via SQL. Returns the number of entries that were evicted. — Requires:
+  ROLE_MANAGE_SYSTEM_SETTING
+  """
+  flushSystemSettingsCache: Int
+  createOrUpdateSeasonZoneRate(dto: SeasonZoneRateDtoInput): Response_SeasonRate
+  deleteSeasonZoneRate(uid: String): Response_SeasonRate
+
+  """Create or update report recipient | ROLE_MANAGE_REPORT_RECIPIENTS"""
+  createOrUpdateReportRecipient(input: ReportRecipientDtoInput!, templateUid: String!): Response_ReportRecipient
+  assignTractorToSeasonFarmFarmer(seasonFarmFarmerUid: String, dto: AssignTractorToSeasonFarmFarmerDtoInput): Response_SeasonFarmFarmer
+  seedWardByDistrict(uid: String): Boolean
+  seedAllLocationFromNAPA: Boolean
+
+  """Send email"""
+  sendEmail(dto: NotificationDtoInput): Boolean!
+
+  """ROLE_DELETE_BILL_CANCELLATION | Delete a bill cancellation"""
+  deleteBillCancellation(uid: String!): Response_BillCancellation
+
+  """
+  Assigning permissions to a role — Requires: ROLE_ASSIGN_PERMISSIONS_TO_ROLE
+  """
+  assignPermissionsToRole(roleDto: RoleDtoInput!, roleUid: String!): Response_Role
+  deleteSeasonFarmFarmer(uid: String): Response_SeasonFarmFarmer
+  createOrUpdateSubWard(dto: SubWardDtoInput): Response_SubWard
+  deleteRegion(uid: String): Response_Region
+
+  """
+  Assign Roles To User  | Permission: ROLE_ASSIGN_ROLES_TO_USER — Requires: ROLE_ASSIGN_ROLES_TO_USER
+  """
+  assignRolesToUser(uid: String, userRoleListDto: UserRoleListDtoInput): Response_User
+  deleteSubWard(uid: String): Response_SubWard
+  seedWardFromNAPA: Boolean
+  prepareCultivationBill(seasonFarmFarmerUid: String): Response_SeasonFarmFarmer
+
+  """Create or update tractor | ROLE_MANAGE_TRACTOR"""
+  createOrUpdateTractor(dto: TractorDtoInput): Response_Tractor
+
+  """Soft-delete an SMS log — Requires: ROLE_DELETE_SMS_LOG"""
+  deleteSmsLog(uid: String): Response_SmsLog
+
+  """Save role — Requires: ROLE_MANAGE_ROLE"""
+  saveRole(roleDto: RoleDtoInput!): Response_Role
+
+  """Create or update bill item | ROLE_MANAGE_BILL_ITEM"""
+  saveOrUpdateBillItem(input: BillItemDTOInput!, billUid: String!): Response_BillItem
+
+  """Soft-delete a designation — Requires: ROLE_DELETE_DESIGNATION"""
+  deleteDesignation(uid: String): Response_Designation
+  deleteWard(uid: String): Response_Ward
+
+  """Unlock user — Requires: ROLE_UNLOCK_USER"""
+  unlockUser(uid: String): Response_User
+
+  """Create or update a department — Requires: ROLE_MANAGE_DEPARTMENT"""
+  saveDepartment(dto: DepartmentDtoInput): Response_Department
+  uploadProfilePhoto(attachmentDto: AttachmentDtoInput): Response_Attachment
+
+  """
+  Change your own password (self-service). The current password must be
+  supplied, so a user can only change their own. — Requires: any signed-in user
+  """
+  changePassword(uid: String, changePasswordDto: ChangePasswordDtoInput): Response_User
+
+  """ROLE_DELETE_CULTIVATION_PAYMENT"""
+  deleteCultivationPayment(uid: String!): Response_CultivationPayment
+  deleteFieldOfficerSubWard(uid: String): Response_FieldOfficerSubWard
+
+  """Delete tractor operator | ROLE_MANAGE_TRACTOR_OPERATOR"""
+  deleteTractorOperator(uid: String): Response_TractorOperator
+
+  """Create or update a designation — Requires: ROLE_MANAGE_DESIGNATION"""
+  saveDesignation(dto: DesignationDtoInput): Response_Designation
+
+  """Create or update farmer | ROLE_MANAGE_FARMER"""
+  createOrUpdateFarmer(dto: FarmerDtoInput): Response_Farmer
+  createOrUpdateSeasonFarmFarmer(dto: SeasonFarmFarmerDtoInput): Response_SeasonFarmFarmer
+
+  """Close a tractor operator assignment"""
+  unassignOperatorFromTractor(assignmentUid: String): Response_TractorOperatorAssignment
+  seedDistrictByRegionUid(uid: String): Boolean
+  seedCouncilByDistrict(uid: String): Boolean
+
+  """ROLE_MANAGE_BILL"""
+  reRequestControlNumber(billChangeDTO: BillChangeDTOInput!): Response_Bill
+
+  """ROLE_MANAGE_BILL"""
+  reuseControlNumber(billReUseDTO: BillReUseDTOInput!): Response_Bill
+  assignSubWardsToFieldOfficer(dto: FieldOfficerSubWardsDtoInput): Response_FieldOfficerSubWard
+}
+
+input NotificationDtoInput {
+  attachments: [MailAttachmentDtoInput]
+  cc: [String]
+  htmlBody: Boolean
+  mailTo: String
+  message: String
+  subject: String
+}
+
+enum NullHandling {
+  NATIVE
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+type Order {
+  direction: Direction
+  ignoreCase: Boolean
+  nullHandlingHint: NullHandling
+  property: String!
+}
+
+type Page_Bill {
+  content: [Bill]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_BillCancellation {
+  content: [BillCancellation]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_BillItem {
+  content: [BillItem]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_BillPayment {
+  content: [BillPayment]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_CultivationLog {
+  content: [CultivationLog]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_CultivationPayment {
+  content: [CultivationPayment]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_CultivationSeason {
+  content: [CultivationSeason]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_Department {
+  content: [Department]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_Designation {
+  content: [Designation]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_District {
+  content: [District]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_Farm {
+  content: [Farm]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_FarmCoordinate {
+  content: [FarmCoordinate]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_Farmer {
+  content: [Farmer]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_FieldOfficerSubWard {
+  content: [FieldOfficerSubWard]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_Permission {
+  content: [Permission]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_Region {
+  content: [Region]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_ReportActor {
+  content: [ReportActor]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_ReportRecipient {
+  content: [ReportRecipient]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_SeasonFarmFarmer {
+  content: [SeasonFarmFarmer]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_SeasonRate {
+  content: [SeasonRate]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_SmsLog {
+  content: [SmsLog]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_SubWard {
+  content: [SubWard]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_Tractor {
+  content: [Tractor]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_TractorOperator {
+  content: [TractorOperator]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_User {
+  content: [User]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+type Page_Ward {
+  content: [Ward]
+  first: Boolean!
+  hasContent: Boolean!
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  last: Boolean!
+  nextOrLastPageable: Pagination
+  nextPageable: Pagination
+  number: Int!
+  numberOfElements: Int!
+  pageable: Pagination
+  previousOrFirstPageable: Pagination
+  previousPageable: Pagination
+  size: Int!
+  sort: Sorting
+  totalElements: Long!
+  totalPages: Int!
+}
+
+input PageableParamInput {
+  first: Int
+  searchCombinationType: SearchCombinationType
+  searchFields: [SearchFieldsDtoInput]
+  size: Int
+  sortBy: String
+  sortDirection: String
+}
+
+type Pagination {
+  pageNumber: Int!
+  pageSize: Int
+  sort: Sort
+}
+
+enum PaymentChannelEnum {
+  AIRTELMONEY
+  AMEX
+  CD
+  EAZYPESA
+  HALOPESA
+  IB
+  MB
+  MC
+  MPESA
+  OT
+  PS
+  TIGOPESA
+  TPESA
+  TR
+  UPI
+  VC
+}
+
+input PaymentFilterDTOInput {
+  controlNumber: String
+  currency: String
+  endDate: String
+  isReconciled: Boolean
+  payerCellNumber: String
+  payerName: String
+  paymentChannel: PaymentChannelEnum
+  paymentReference: String
+  paymentSpCode: String
+  paymentSpName: String
+  paymentType: String
+  receiptNumber: String
+  startDate: String
+}
+
+type Permission {
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  displayName: String
+  groupName: String
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  roles: [Role]
+  service: String
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+type PermissionDto {
+  displayName: String
+  groupName: String
+  permissions: [PermissionParameter]
+  service: String
+  uid: String
+}
+
+input PermissionDtoInput {
+  displayName: String
+  groupName: String
+  permissions: [PermissionParameterInput]
+  service: String
+  uid: String
+}
+
+input PermissionInput {
+  createdAt: LocalDateTime
+  displayName: String
+  groupName: String
+  id: Long
+  name: String
+  roles: [RoleInput]
+  service: String
+  uid: String
+}
+
+type PermissionParameter {
+  displayName: String
+  name: String
+  uid: String
+}
+
+input PermissionParameterInput {
+  displayName: String
+  name: String
+  uid: String
+}
+
+enum ProcessStatusEnum {
+  APPROVED
+  CANCELLED
+  COMPLETED
+  DRAFT
+  REJECTED
+  ROLLED_BACK
+  SUBMITTED
+}
+
+"""Query root"""
+type Query {
+  """
+  List attachments by source name and ID — Requires: ROLE_LOOKUP_ATTACHMENT, ROLE_VIEW_ATTACHMENT
+  """
+  listAttachmentsBySourceNameAndId(sourceId: String, sourceName: AttachmentSourceNameEnum): [Attachment]
+
+  """
+  Profile of the currently signed-in user (works for any role). — Requires: any signed-in user
+  """
+  myProfile: User
+  getBillItemCodeByUid(uid: String!): Response_BillItem
+
+  """
+  List every active designation — Requires: ROLE_LOOKUP_DESIGNATION, ROLE_VIEW_DESIGNATION
+  """
+  allDesignations: [Designation]
+
+  """View report recipient | ROLE_VIEW_REPORT_RECIPIENTS"""
+  findReportRecipient(uid: String!): Response_ReportRecipient
+
+  """ROLE_PRINT_PAYMENT_RECEIPT"""
+  getPaymentReceipt(receiptNos: [String]!): Response_String
+
+  """ROLE_MANAGE_TRACTOR"""
+  sendFarm: Response_Boolean
+  existByEmail(email: String): Boolean
+
+  """
+  Get all operator assignments for a tractor |
+  ROLE_LOOKUP_TRACTOR_OPERATOR_ASSIGNMENT |
+  ROLE_VIEW_TRACTOR_OPERATOR_ASSIGNMENT
+  """
+  getTractorOperatorAssignmentHistory(tractorUid: String): [TractorOperatorAssignment]
+
+  """Get all active farms | ROLE_VIEW_FARM | ROLE_LOOKUP_FARM"""
+  getAllFarmsPageable(pageableParam: PageableParamInput, active: Boolean): Page_Farm
+
+  """
+  List users that hold a given designation (pageable) — Requires: ROLE_LOOKUP_USER, ROLE_VIEW_USER
+  """
+  usersByDesignationPageable(pageableParam: PageableParamInput, active: Boolean, designationUid: String): Page_User
+
+  """
+  Get single permission by uid — Requires: ROLE_MANAGE_ROLE, ROLE_VIEW_ROLE
+  """
+  getPermissionByUid(uid: String!): Response_Permission
+  findDistrictByUid(uid: String): Response_District
+
+  """Find tractor by UID | ROLE_VIEW_TRACTOR"""
+  findTractorByUid(uid: String): Response_Tractor
+
+  """Find an SMS log by uid — Requires: ROLE_VIEW_SMS_LOG"""
+  findSmsLog(uid: String): Response_SmsLog
+  findSeasonFarmFarmerByUid(uid: String): Response_SeasonFarmFarmer
+
+  """Loading all roles — Requires: ROLE_LOOKUP_ROLE, ROLE_VIEW_ROLE"""
+  listingRoles(active: Boolean!): [Role]
+
+  """
+  Get all permissions pageable — Requires: ROLE_LOOKUP_PERMISSION, ROLE_VIEW_PERMISSION
+  """
+  getAllPermissionsPageable(pageableParam: PageableParamInput!, active: Boolean): Page_Permission
+  findFieldOfficerSubWardByUid(uid: String): Response_FieldOfficerSubWard
+
+  """Get pageable bills | ROLE_LOOKUP_BILL | ROLE_VIEW_BILL"""
+  getBills(pageableParam: PageableParamInput, billFilterDTO: BillFilterDTOInput): Page_Bill
+
+  """Find cultivation log by UID | ROLE_VIEW_CULTIVATION_LOG"""
+  findCultivationLogByUid(uid: String): Response_CultivationLog
+
+  """
+  Get all permission groups — Requires: ROLE_LOOKUP_PERMISSION, ROLE_VIEW_PERMISSION
+  """
+  getPermissions: [PermissionDto]
+
+  """Find user by UID — Requires: ROLE_MANAGE_USER"""
+  findUserByUid(uid: String): Response_User
+
+  """Get all active farmers | ROLE_VIEW_FARMER | ROLE_LOOKUP_FARMER"""
+  getAllFarmersPageable(pageableParam: PageableParamInput, active: Boolean): Page_Farmer
+
+  """
+  Get report templates — Requires: ROLE_LOOKUP_REPORT_TEMPLATE, ROLE_VIEW_REPORT_TEMPLATE
+  """
+  allReportTemplate: [ReportTemplate]
+
+  """Get current tractor operator assignment"""
+  getCurrentOperatorAssignmentByTractor(tractorUid: String): Response_TractorOperatorAssignment
+
+  """Find a farm coordinate by uid | ROLE_VIEW_FARM"""
+  findFarmCoordinateByUid(uid: String): Response_FarmCoordinate
+
+  """
+  Find a system setting by uid — Requires: ROLE_VIEW_SYSTEM_SETTING, ROLE_MANAGE_SYSTEM_SETTING
+  """
+  findSystemSetting(uid: String): Response_SystemSetting
+
+  """
+  Get tractor operators | ROLE_LOOKUP_TRACTOR_OPERATOR | ROLE_VIEW_TRACTOR_OPERATOR
+  """
+  getAllTractorOperatorsPageable(pageableParam: PageableParamInput, active: Boolean): Page_TractorOperator
+  getSeasonFarmFarmersPageable(seasonUid: String, farmUid: String, pageableParam: PageableParamInput, active: Boolean!, farmerUid: String): Page_SeasonFarmFarmer
+
+  """Get users pageable — Requires: ROLE_LOOKUP_USER, ROLE_VIEW_USER"""
+  getAllUsersPageable(pageableParam: PageableParamInput, active: Boolean): Page_User
+
+  """
+  Get role by Id | Permissions: ROLE_MANAGE_ROLE — Requires: ROLE_MANAGE_ROLE
+  """
+  getRoleByUid(roleUid: String!): Response_Role
+
+  """Find a designation by uid — Requires: ROLE_VIEW_DESIGNATION"""
+  findDesignation(uid: String): Response_Designation
+
+  """View report actor | ROLE_VIEW_REPORT_ACTORS"""
+  findReportActor(uid: String!): Response_ReportActor
+
+  """ROLE_PRINT_PAYMENT_RECEIPT"""
+  getPaymentReceiptByControlNumber(controlNos: [String]!): Response_String
+
+  """ROLE_VIEW_BILL_CANCELLATION | Get a bill cancellation by uid"""
+  getBillCancellationByUid(uid: String!): Response_BillCancellation
+  findSubWardByUid(uid: String): Response_SubWard
+
+  """ROLE_VIEW_PAYMENTS"""
+  getUnreconciledPayments(filter: PaymentFilterDTOInput!, pageableParam: PageableParamInput!): Page_BillPayment
+  findWardByUid(uid: String): Response_Ward
+  findCultivationSeasonByUid(uid: String): Response_CultivationSeason
+  getWardsPageable(pageableParam: PageableParamInput, districtUid: String, active: Boolean): Page_Ward
+
+  """
+  View report recipients by template | ROLE_LOOKUP_REPORT_RECIPIENTS | ROLE_VIEW_REPORT_RECIPIENTS
+  """
+  getReportRecipientsByTemplate(pageableParam: PageableParamInput, active: Boolean, templateUid: String!): Page_ReportRecipient
+
+  """Get tractors | ROLE_VIEW_TRACTOR | ROLE_LOOKUP_TRACTOR"""
+  getAllTractorsPageable(pageableParam: PageableParamInput, active: Boolean): Page_Tractor
+
+  """
+  View report actors by template | ROLE_LOOKUP_REPORT_ACTORS | ROLE_VIEW_REPORT_ACTORS
+  """
+  getReportActorsByTemplate(pageableParam: PageableParamInput, active: Boolean, templateUid: String!): Page_ReportActor
+  getDistrictsPageable(regionUid: String, pageableParam: PageableParamInput, active: Boolean): Page_District
+
+  """
+  Get cultivation seasons | ROLE_LOOKUP_CULTIVATING_SEASON | ROLE_VIEW_CULTIVATING_SEASON
+  """
+  getCultivationSeasonsPageable(pageableParam: PageableParamInput, active: Boolean): Page_CultivationSeason
+  getMySeasonFarmFarmersPageable(pageableParam: PageableParamInput, active: Boolean!): Page_SeasonFarmFarmer
+
+  """
+  List every active system setting — Requires: ROLE_LOOKUP_SYSTEM_SETTING, ROLE_VIEW_SYSTEM_SETTING
+  """
+  allSystemSettings: [SystemSetting]
+
+  """Find farm by uid | ROLE_VIEW_FARM"""
+  findFarmByUid(uid: String): Response_Farm
+
+  """Build a polygon from a farm's active coordinates | ROLE_VIEW_FARM"""
+  getFarmPolygon(farmUid: String): Response_String
+  getSeasonZoneRatesBySeason(seasonUid: String, pageableParam: PageableParamInput, active: Boolean): Page_SeasonRate
+  getSeasonZoneRatesPageable(pageableParam: PageableParamInput, active: Boolean): Page_SeasonRate
+
+  """
+  List attachments by source UID — Requires: ROLE_LOOKUP_ATTACHMENT, ROLE_VIEW_ATTACHMENT
+  """
+  listAttachmentsBySourceUid(sourceUid: String): [Attachment]
+
+  """Find a department by uid — Requires: ROLE_VIEW_DEPARTMENT"""
+  findDepartment(uid: String): Response_Department
+
+  """Get farms by cotton district | ROLE_LOOKUP_FARM | ROLE_VIEW_FARM"""
+  getFarmsByCottonDistrict(pageableParam: PageableParamInput, districtUid: String, active: Boolean): Page_Farm
+  getAttachmentByUid(attachmentUid: String!): Response_Attachment
+
+  """
+  Get all permission groups — Requires: ROLE_LOOKUP_PERMISSION, ROLE_VIEW_PERMISSION
+  """
+  getAllPermissions: [Permission]
+
+  """
+  Pageable department list — Requires: ROLE_LOOKUP_DEPARTMENT, ROLE_VIEW_DEPARTMENT
+  """
+  allDepartmentsPageable(pageableParam: PageableParamInput, active: Boolean): Page_Department
+
+  """
+  Get cultivation logs | ROLE_LOOKUP_CULTIVATION_LOG | ROLE_VIEW_CULTIVATION_LOG
+  """
+  getCultivationLogsPageable(pageableParam: PageableParamInput, active: Boolean): Page_CultivationLog
+  getSubWardsPageable(pageableParam: PageableParamInput, wardUid: String, active: Boolean): Page_SubWard
+
+  """
+  Pageable designation list — Requires: ROLE_LOOKUP_DESIGNATION, ROLE_VIEW_DESIGNATION
+  """
+  allDesignationsPageable(pageableParam: PageableParamInput, active: Boolean): Page_Designation
+
+  """ROLE_MANAGE_OTHER_BILLS"""
+  getOtherBills(filter: BillFilterDTOInput!, pageableParam: PageableParamInput!): Page_Bill
+
+  """Get farms by sub ward | ROLE_LOOKUP_FARM | ROLE_VIEW_FARM"""
+  getFarmBySubWard(pageableParam: PageableParamInput, subWardUid: String, active: Boolean): Page_Farm
+  getFieldOfficerSubWardsPageable(fieldOfficerUid: String, pageableParam: PageableParamInput, subWardUid: String, active: Boolean!): Page_FieldOfficerSubWard
+  findUserByEmail(email: String): Response_User
+
+  """Find farmer by uid | ROLE_VIEW_FARMER"""
+  findFarmerByUid(uid: String): Response_Farmer
+
+  """ROLE_VIEW_CULTIVATION_PAYMENT"""
+  getCultivationPaymentByUid(uid: String!): Response_CultivationPayment
+
+  """ROLE_VIEW_BILL_CANCELLATION | Get pending bill cancellations"""
+  getBillCancellations(pageableParam: PageableParamInput!, active: Boolean!): Page_BillCancellation
+
+  """
+  Pageable SMS log list — Requires: ROLE_LOOKUP_SMS_LOG, ROLE_VIEW_SMS_LOG
+  """
+  allSmsLogsPageable(pageableParam: PageableParamInput, active: Boolean): Page_SmsLog
+
+  """ROLE_VIEW_BILL_ITEM"""
+  getBillItemsByBill(pageableParam: PageableParamInput!, active: Boolean!, billUid: String!): Page_BillItem
+
+  """
+  List every active department — Requires: ROLE_LOOKUP_DEPARTMENT, ROLE_VIEW_DEPARTMENT
+  """
+  allDepartments: [Department]
+
+  """
+  List system settings filtered by category — Requires: ROLE_LOOKUP_SYSTEM_SETTING, ROLE_VIEW_SYSTEM_SETTING
+  """
+  systemSettingsByCategory(category: String): [SystemSetting]
+
+  """ROLE_VIEW_PAYMENTS"""
+  getPayments(filter: PaymentFilterDTOInput, pageableParam: PageableParamInput): Page_BillPayment
+
+  """
+  Get attachments by source UID and model — Requires: ROLE_LOOKUP_ATTACHMENT, ROLE_VIEW_ATTACHMENT
+  """
+  attachmentsBySourceUidAndModel(sourceUid: String, model: String): [Attachment]
+
+  """
+  Get pageable coordinates for a farm | ROLE_LOOKUP_FARM_COORDINATE | ROLE_VIEW_FARM_COORDINATE
+  """
+  getFarmCoordinatesByFarm(farmUid: String, pageableParam: PageableParamInput, active: Boolean): Page_FarmCoordinate
+  getRegionsPageable(pageableParam: PageableParamInput, active: Boolean): Page_Region
+
+  """ROLE_MANAGE_BILL"""
+  getBillByBillUid(uid: String!): Response_Bill
+
+  """ROLE_VIEW_CULTIVATION_PAYMENT"""
+  getCultivationPayments(pageableParam: PageableParamInput!, active: Boolean): Page_CultivationPayment
+
+  """ROLE_GENERATE_BILL_PDF"""
+  getBillPdf(uid: String): Response_String
+
+  """Find tractor operator by UID"""
+  findTractorOperatorByUid(uid: String): Response_TractorOperator
+
+  """
+  Get all tractor assignments for an operator |
+  ROLE_LOOKUP_TRACTOR_OPERATOR_ASSIGNMENT |
+  ROLE_VIEW_TRACTOR_OPERATOR_ASSIGNMENT
+  """
+  getOperatorTractorAssignmentHistory(operatorUid: String): [TractorOperatorAssignment]
+  findRegionByUid(uid: String): Response_Region
+  findReportTemplate(uid: String!): Response_ReportTemplate
+}
+
+type Region {
+  active: Boolean
+  code: String
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  districts: [District]
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  napaId: Long
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input RegionDtoInput {
+  code: String
+  name: String
+  uid: String
+}
+
+input RegionInput {
+  code: String
+  districts: [DistrictInput]
+  id: Long
+  name: String
+  napaId: Long
+  uid: String
+}
+
+type ReportActor {
+  action: ReportStageEnum
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  role: Role
+  sequence: Int
+  template: ReportTemplate
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input ReportActorDtoInput {
+  action: ReportStageEnum!
+  roleUid: String!
+  sequence: Int!
+  uid: String
+}
+
+type ReportRecipient {
+  active: Boolean
+  address: String
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  email: String
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  phone: String
+  template: ReportTemplate
+  title: String
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input ReportRecipientDtoInput {
+  address: String
+  email: String!
+  name: String
+  phone: String
+  title: String
+  uid: String
+}
+
+enum ReportStageEnum {
+  APPROVE
+  ENDORSE
+  PREPARE
+  VALIDATE
+}
+
+type ReportTemplate {
+  active: Boolean
+  code: String
+  content: String
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  description: String
+  editable: Boolean
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  subject: String
+  templateType: ReportTemplateType
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input ReportTemplateDtoInput {
+  code: String!
+  content: String!
+  description: String
+  editable: Boolean
+  name: String!
+  subject: String
+  templateType: ReportTemplateType!
+  uid: String
+}
+
+enum ReportTemplateType {
+  REPORT_TEMPLATE
+}
+
+type Response_Attachment {
+  code: Int
+  data: Attachment
+  dataList: [Attachment]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Bill {
+  code: Int
+  data: Bill
+  dataList: [Bill]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_BillCancellation {
+  code: Int
+  data: BillCancellation
+  dataList: [BillCancellation]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_BillItem {
+  code: Int
+  data: BillItem
+  dataList: [BillItem]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_BillPayment {
+  code: Int
+  data: BillPayment
+  dataList: [BillPayment]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Boolean {
+  code: Int
+  data: Boolean
+  dataList: [Boolean]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_CultivationLog {
+  code: Int
+  data: CultivationLog
+  dataList: [CultivationLog]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_CultivationPayment {
+  code: Int
+  data: CultivationPayment
+  dataList: [CultivationPayment]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_CultivationSeason {
+  code: Int
+  data: CultivationSeason
+  dataList: [CultivationSeason]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Department {
+  code: Int
+  data: Department
+  dataList: [Department]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Designation {
+  code: Int
+  data: Designation
+  dataList: [Designation]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_District {
+  code: Int
+  data: District
+  dataList: [District]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Farm {
+  code: Int
+  data: Farm
+  dataList: [Farm]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_FarmCoordinate {
+  code: Int
+  data: FarmCoordinate
+  dataList: [FarmCoordinate]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Farmer {
+  code: Int
+  data: Farmer
+  dataList: [Farmer]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_FieldOfficerSubWard {
+  code: Int
+  data: FieldOfficerSubWard
+  dataList: [FieldOfficerSubWard]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Permission {
+  code: Int
+  data: Permission
+  dataList: [Permission]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Region {
+  code: Int
+  data: Region
+  dataList: [Region]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_ReportActor {
+  code: Int
+  data: ReportActor
+  dataList: [ReportActor]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_ReportRecipient {
+  code: Int
+  data: ReportRecipient
+  dataList: [ReportRecipient]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_ReportTemplate {
+  code: Int
+  data: ReportTemplate
+  dataList: [ReportTemplate]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Role {
+  code: Int
+  data: Role
+  dataList: [Role]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_SeasonFarmFarmer {
+  code: Int
+  data: SeasonFarmFarmer
+  dataList: [SeasonFarmFarmer]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_SeasonRate {
+  code: Int
+  data: SeasonRate
+  dataList: [SeasonRate]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_SmsLog {
+  code: Int
+  data: SmsLog
+  dataList: [SmsLog]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_String {
+  code: Int
+  data: String
+  dataList: [String]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_SubWard {
+  code: Int
+  data: SubWard
+  dataList: [SubWard]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_SystemSetting {
+  code: Int
+  data: SystemSetting
+  dataList: [SystemSetting]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Tractor {
+  code: Int
+  data: Tractor
+  dataList: [Tractor]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_TractorOperator {
+  code: Int
+  data: TractorOperator
+  dataList: [TractorOperator]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_TractorOperatorAssignment {
+  code: Int
+  data: TractorOperatorAssignment
+  dataList: [TractorOperatorAssignment]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_User {
+  code: Int
+  data: User
+  dataList: [User]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Response_Ward {
+  code: Int
+  data: Ward
+  dataList: [Ward]
+  message: String
+  requestId: String
+  status: Boolean
+}
+
+type Role {
+  active: Boolean
+  canBeEdited: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  description: String
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  permissionList: [Permission]
+  rolesList: [RoleUser]
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input RoleDtoInput {
+  description: String
+  name: String
+  permissionUidList: [String]
+  uid: String
+}
+
+input RoleInput {
+  canBeEdited: Boolean
+  description: String
+  id: Long
+  name: String
+  permissionList: [PermissionInput]
+  rolesList: [RoleUserInput]
+  uid: String
+}
+
+type RoleUser {
+  createdAt: LocalDateTime
+  id: Long
+  role: Role
+  user: User
+}
+
+input RoleUserInput {
+  createdAt: LocalDateTime
+  id: Long
+  role: RoleInput
+  user: UserInput
+}
+
+enum SearchCombinationType {
+  And
+  Or
+}
+
+input SearchFieldsDtoInput {
+  fieldName: String
+  fieldValue: String
+  fieldValues: [String]
+  searchType: SearchOperationType
+}
+
+enum SearchOperationType {
+  Between
+  Equals
+  GreaterThan
+  In
+  IsNotNull
+  IsNull
+  LessThan
+  Like
+  NotEquals
+}
+
+type SeasonFarmFarmer {
+  active: Boolean
+  bill: Bill
+  commentToDriver: String
+  completedAt: LocalDateTime
+  createdAt: LocalDateTime
+  createdBy: User
+  cultivationDate: LocalDate
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  farm: Farm
+  farmer: Farmer
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  notes: String
+  season: CultivationSeason
+  startedAt: LocalDateTime
+  status: FarmCultivationStatus
+  tractor: Tractor
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input SeasonFarmFarmerDtoInput {
+  farmUid: String!
+  farmerUid: String!
+  notes: String
+  uid: String
+}
+
+type SeasonRate {
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  notes: String
+  ratePerAcre: BigDecimal
+  season: CultivationSeason
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input SeasonZoneRateDtoInput {
+  agriculturalZoneUid: String!
+  notes: String
+  ratePerAcre: BigDecimal!
+  seasonUid: String!
+  uid: String
+}
+
+type SmsLog {
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  id: Long
+  isDeleted: Boolean
+  message: String
+  messageId: String
+  mgovResponse: String
+  mgovResponseCode: String
+  migrated: Boolean
+  recipient: String
+  status: SmsStatus
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+enum SmsStatus {
+  FORWARDED
+  NOT_SENT
+  SENT
+}
+
+type Sort {
+  orders: [Order!]!
+}
+
+type Sorting {
+  orders: [Order!]!
+}
+
+type SubWard {
+  active: Boolean
+  code: String
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  napaId: Long
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+  ward: Ward
+}
+
+input SubWardDtoInput {
+  address: String
+  code: String
+  meetingDate: LocalDate
+  name: String!
+  regNo: String
+  uid: String
+  wardUid: String!
+}
+
+input SubWardInput {
+  code: String
+  id: Long
+  name: String
+  napaId: Long
+  uid: String
+  ward: WardInput
+}
+
+type SystemSetting {
+  active: Boolean
+  category: String
+  createdAt: LocalDateTime
+  createdBy: User
+  defaultValue: String
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  description: String
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  settingKey: String
+  settingValue: String
+  systemSeed: Boolean!
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+  valueType: String
+}
+
+input SystemSettingDtoInput {
+  category: String
+  defaultValue: String
+  description: String
+  settingKey: String!
+  settingValue: String
+  uid: String
+  valueType: String
+}
+
+type Tractor {
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  fuelCapacityLitres: Float
+  id: Long
+  isDeleted: Boolean
+  make: String
+  manufactureYear: Int
+  migrated: Boolean
+  model: String
+  notes: String
+  registrationNumber: String
+  status: TractorStatus
+  tractorId: String
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input TractorDtoInput {
+  fuelCapacityLitres: Float
+  make: String
+  manufactureYear: Int
+  model: String
+  notes: String
+  registrationNumber: String!
+  status: TractorStatus!
+  tractorId: String!
+  uid: String
+}
+
+type TractorOperator {
+  active: Boolean
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  email: String
+  id: Long
+  isDeleted: Boolean
+  licenseNumber: String
+  migrated: Boolean
+  name: String
+  notes: String
+  phone: String
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+type TractorOperatorAssignment {
+  active: Boolean
+  assignedAt: LocalDateTime
+  assignedBy: User
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  id: Long
+  isDeleted: Boolean
+  migrated: Boolean
+  notes: String
+  operator: TractorOperator
+  tractor: Tractor
+  uid: String
+  unassignedAt: LocalDateTime
+  unassignedBy: User
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input TractorOperatorAssignmentDtoInput {
+  notes: String
+  operatorUid: String!
+  tractorUid: String!
+}
+
+input TractorOperatorDtoInput {
+  email: String
+  licenseNumber: String!
+  name: String!
+  notes: String
+  phone: String!
+  uid: String
+}
+
+enum TractorStatus {
+  AVAILABLE
+  IN_USE
+  OUT_OF_SERVICE
+  UNDER_MAINTENANCE
+}
+
+type User {
+  accountNonExpired: Boolean!
+  accountNonLocked: Boolean!
+  active: Boolean
+  authMode: AuthenticationMethod
+  authorities: [GrantedAuthority]
+  createdAt: LocalDateTime
+  createdBy: User
+  credentialsNonExpired: Boolean!
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  department: Department
+  designation: Designation
+  device: String
+  email: String
+  enabled: Boolean!
+  failedAttempt: Int!
+  firstLogin: Boolean
+  firstName: String
+  fullName: String
+  id: Long
+  ipAddress: String
+  isDeleted: Boolean
+  isStaff: Boolean
+  lastName: String
+  location: String
+  lockTime: LocalDateTime
+  middleName: String
+  migrated: Boolean
+  nationalId: String
+  password: String
+  passwordExpirationDate: LocalDateTime
+  passwordExpired: Boolean
+  phoneNumber: String
+  role: String
+  rolesList: [RoleUser]
+  signatureData: String
+  smsquota: Int
+  subWards: [FieldOfficerSubWard]
+  token: String
+  tokenCreatedAt: LocalDateTime
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+  username: String
+}
+
+input UserDtoInput {
+  departmentUid: String
+  designationUid: String
+  email: String!
+  firstName: String!
+  isStaff: Boolean
+  lastName: String!
+  middleName: String
+  nationalId: String!
+  phoneNumber: String!
+  roleUidList: [String]
+  signatureDataBinary: String
+  uid: String
+}
+
+input UserInput {
+  authMode: AuthenticationMethod
+  department: DepartmentInput
+  designation: DesignationInput
+  device: String
+  email: String
+  firstLogin: Boolean
+  firstName: String
+  fullName: String
+  id: Long
+  ipAddress: String
+  isStaff: Boolean
+  lastName: String
+  location: String
+  lockTime: LocalDateTime
+  middleName: String
+  migrated: Boolean
+  nationalId: String
+  phoneNumber: String
+  role: String
+  rolesList: [RoleUserInput]
+  signatureData: String
+  smsquota: Int
+  subWards: [FieldOfficerSubWardInput]
+  token: String
+  uid: String
+}
+
+input UserRoleListDtoInput {
+  rolesList: [RoleInput]
+}
+
+type Ward {
+  active: Boolean
+  code: String
+  createdAt: LocalDateTime
+  createdBy: User
+  deletedAt: LocalDateTime
+  deletedBy: Long
+  district: District
+  id: Long
+  integrationUid: String
+  isDeleted: Boolean
+  migrated: Boolean
+  name: String
+  napaId: Long
+  subWards: [SubWard]
+  uid: String
+  updatedAt: LocalDateTime
+  updatedBy: Long
+}
+
+input WardDtoInput {
+  code: String
+  districtUid: String
+  name: String
+  uid: String
+}
+
+input WardInput {
+  code: String
+  district: DistrictInput
+  id: Long
+  integrationUid: String
+  name: String
+  napaId: Long
+  subWards: [SubWardInput]
+  uid: String
+}
+
