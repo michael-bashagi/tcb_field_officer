@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/network/graphql_client.dart';
 import '../../../farmer_registration/data/farm_repository.dart';
 import '../../../farmer_registration/domain/farmer_request.dart';
 import '../../home/presentation/home_providers.dart';
@@ -53,7 +54,12 @@ class _RegistrationDetailsScreenState
       setState(() => _isGenerating = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to generate control number: $e')),
+          SnackBar(
+            content: Text(userFacingErrorMessage(
+              e,
+              'Unable to generate the billing control number. Please try again.',
+            )),
+          ),
         );
       }
     }

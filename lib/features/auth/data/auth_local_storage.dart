@@ -12,17 +12,16 @@ class AuthLocalStorage {
   AuthLocalStorage(this._storage);
 
   static const String _keyOfficer = 'cached_field_officer';
-  static const String _keyRefreshToken = 'oauth_refresh_token';
-  static const String _keyExpiresAt = 'oauth_expires_at';
 
   Future<void> saveTokens(OAuthTokens tokens) async {
     await _storage.write(
         key: kAccessTokenStorageKey, value: tokens.accessToken);
     if (tokens.refreshToken != null) {
-      await _storage.write(key: _keyRefreshToken, value: tokens.refreshToken);
+      await _storage.write(
+          key: kRefreshTokenStorageKey, value: tokens.refreshToken);
     }
     await _storage.write(
-        key: _keyExpiresAt, value: tokens.expiresAt.toIso8601String());
+        key: kExpiresAtStorageKey, value: tokens.expiresAt.toIso8601String());
   }
 
   Future<void> saveOfficer(FieldOfficer officer) async {
@@ -32,10 +31,11 @@ class AuthLocalStorage {
   Future<String?> getAccessToken() =>
       _storage.read(key: kAccessTokenStorageKey);
 
-  Future<String?> getRefreshToken() => _storage.read(key: _keyRefreshToken);
+  Future<String?> getRefreshToken() =>
+      _storage.read(key: kRefreshTokenStorageKey);
 
   Future<bool> isAccessTokenExpired() async {
-    final raw = await _storage.read(key: _keyExpiresAt);
+    final raw = await _storage.read(key: kExpiresAtStorageKey);
     if (raw == null) return true;
     final expiresAt = DateTime.tryParse(raw);
     if (expiresAt == null) return true;
@@ -55,8 +55,8 @@ class AuthLocalStorage {
 
   Future<void> clearSession() async {
     await _storage.delete(key: kAccessTokenStorageKey);
-    await _storage.delete(key: _keyRefreshToken);
-    await _storage.delete(key: _keyExpiresAt);
+    await _storage.delete(key: kRefreshTokenStorageKey);
+    await _storage.delete(key: kExpiresAtStorageKey);
     await _storage.delete(key: _keyOfficer);
   }
 }

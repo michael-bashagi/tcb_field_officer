@@ -58,7 +58,7 @@ class BillingNotifier extends StateNotifier<BillingState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: 'Failed to load billing information: ${e.toString()}',
+        errorMessage: 'Unable to load billing information. Please try again.',
       );
     }
   }
@@ -95,7 +95,7 @@ class BillingNotifier extends StateNotifier<BillingState> {
     } catch (e) {
       state = state.copyWith(
         isProcessingPayment: false,
-        errorMessage: 'Payment error: ${e.toString()}',
+        errorMessage: 'We couldn\'t process this payment. Please try again.',
       );
       return false;
     }

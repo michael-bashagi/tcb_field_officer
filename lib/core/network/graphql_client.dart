@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import '../constants/api_endpoints.dart';
 import 'api_client.dart';
 
@@ -10,6 +11,16 @@ class GraphQLException implements Exception {
   String toString() => message;
 }
 
+/// Turns any caught error into a short, plain-language message that is
+/// safe to show a field officer. GraphQLException messages are already
+/// authored to be readable, so they pass straight through; anything else
+/// falls back to [fallback] instead of leaking implementation detail.
+String userFacingErrorMessage(Object error, [String? fallback]) {
+  if (error is GraphQLException) return error.message;
+  return fallback ??
+      'Something went wrong. Please check your connection and try again.';
+}
+
 class GraphQLClient {
   final Dio _dio;
 
@@ -19,6 +30,8 @@ class GraphQLClient {
     String document, {
     Map<String, dynamic>? variables,
   }) async {
+    final operation = document.trim().split('\n').first.trim();
+    final sw = Stopwatch()..start();
     late final Response response;
     try {
       response = await _dio.post(
@@ -29,8 +42,11 @@ class GraphQLClient {
         },
       );
     } on DioException catch (e) {
+      debugPrint(
+          '[graphql] $operation failed after ${sw.elapsedMilliseconds}ms: ${e.message}');
       throw GraphQLException(_messageForDioException(e));
     }
+    debugPrint('[graphql] $operation completed in ${sw.elapsedMilliseconds}ms');
 
     final body = response.data;
     if (body is! Map<String, dynamic>) {
@@ -43,8 +59,10 @@ class GraphQLClient {
           .map((e) => (e as Map<String, dynamic>)['message']?.toString())
           .whereType<String>()
           .join('; ');
-      throw GraphQLException(
-        message.isNotEmpty ? message : 'GraphQL request failed.',
+      debugPrint('GraphQL error: $message');
+      throw const GraphQLException(
+        'Something went wrong while contacting the server. Please try again, '
+        'or contact your supervisor if this keeps happening.',
       );
     }
 
@@ -74,10 +92,12 @@ class GraphQLClient {
         return 'No internet connection available. Please connect to a network.';
       case DioExceptionType.badResponse:
         final status = e.response?.statusCode;
-        if (status == 401)
+        if (status == 401) {
           return 'Session expired or unauthorized. Please log in again.';
-        if (status == 403)
+        }
+        if (status == 403) {
           return 'You do not have permission to perform this action.';
+        }
         return 'Server responded with error code: $status';
       default:
         return 'An unexpected error occurred. Please try again.';

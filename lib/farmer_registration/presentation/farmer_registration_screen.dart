@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/network/graphql_client.dart';
 import '../../features/auth/presentation/controllers/auth_provider.dart';
 import '../../features/home/presentation/home_providers.dart';
 import '../../routing/app_router.dart';
@@ -133,9 +134,11 @@ class _FarmerRegistrationBottomSheetState
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Failed to register farmer'),
-          content: SingleChildScrollView(
-            child: SelectableText(e.toString()),
-          ),
+          content: Text(userFacingErrorMessage(
+            e,
+            'Something went wrong while registering this farmer. '
+            'Please check your connection and try again.',
+          )),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -176,7 +179,7 @@ class _FarmerRegistrationBottomSheetState
         ),
       ),
       error: (error, stackTrace) => Text(
-        'Failed to load $label: $error',
+        'Unable to load $label. Please check your connection and try again.',
         style: const TextStyle(color: Colors.red, fontSize: 12),
       ),
       data: (items) => DropdownButtonFormField<NamedRef>(
@@ -340,9 +343,10 @@ class _FarmerRegistrationBottomSheetState
                       child: CircularProgressIndicator(),
                     ),
                   ),
-                  error: (error, stackTrace) => Text(
-                    'Failed to load subwards: $error',
-                    style: const TextStyle(color: Colors.red),
+                  error: (error, stackTrace) => const Text(
+                    'Unable to load your assigned subwards. '
+                    'Please check your connection and try again.',
+                    style: TextStyle(color: Colors.red),
                   ),
                   data: (subWards) => subWards.isEmpty
                       ? const Text(

@@ -74,9 +74,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: Center(child: CircularProgressIndicator()),
                 ),
-                error: (error, stackTrace) => Text(
-                  'Failed to load metrics: $error',
-                  style: const TextStyle(color: Colors.red),
+                error: (error, stackTrace) => const Text(
+                  'Unable to load your metrics. Pull down to refresh.',
+                  style: TextStyle(color: Colors.red),
                 ),
                 data: (metrics) => Row(
                   children: [
@@ -120,11 +120,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   padding: EdgeInsets.symmetric(vertical: 24),
                   child: Center(child: CircularProgressIndicator()),
                 ),
-                error: (error, stackTrace) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
+                error: (error, stackTrace) => const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24),
                   child: Text(
-                    'Failed to load farmers: $error',
-                    style: const TextStyle(color: Colors.red),
+                    'Unable to load your farmers. Pull down to refresh.',
+                    style: TextStyle(color: Colors.red),
                   ),
                 ),
                 data: (farmers) {

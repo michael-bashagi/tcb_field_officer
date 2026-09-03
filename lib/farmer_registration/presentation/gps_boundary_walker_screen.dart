@@ -80,7 +80,10 @@ class _GpsBoundaryWalkerScreenState
             ),
           );
     } catch (e) {
-      _showError('Failed to get GPS location: $e');
+      _showError(
+        'Unable to get your GPS location. Please make sure location '
+        'services are turned on and try again.',
+      );
     } finally {
       if (mounted) setState(() => _isCapturing = false);
     }
@@ -88,8 +91,16 @@ class _GpsBoundaryWalkerScreenState
 
   void _finish() {
     final gpsState = ref.read(gpsTrackerProvider);
-    if (!gpsState.isValidPolygon) {
+    if (!gpsState.hasEnoughPoints) {
       _showError('Record at least 3 boundary points before finishing.');
+      return;
+    }
+    if (!gpsState.hasMeaningfulArea) {
+      _showError(
+        'These boundary points are too close together to form a valid '
+        'farm area. Please walk around the actual farm perimeter and '
+        'try again.',
+      );
       return;
     }
 
@@ -198,7 +209,7 @@ class _GpsBoundaryWalkerScreenState
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: gpsState.isValidPolygon ? _finish : null,
+                      onPressed: gpsState.hasEnoughPoints ? _finish : null,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         backgroundColor: AppColors.goldAccent,

@@ -17,7 +17,9 @@ class GpsTrackerState {
     this.error,
   });
 
-  bool get isValidPolygon => capturedPoints.length >= 3;
+  bool get hasEnoughPoints => capturedPoints.length >= 3;
+
+  bool get hasMeaningfulArea => calculatedAcreage > 0;
 
   GpsTrackerState copyWith({
     bool? isTracking,

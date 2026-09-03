@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/api_endpoints.dart';
@@ -44,10 +45,15 @@ class AuthRepository {
   }
 
   Future<FieldOfficer?> restoreSession() async {
+    final sw = Stopwatch()..start();
     final accessToken = await _localStorage.getAccessToken();
-    if (accessToken == null) return null;
+    if (accessToken == null) {
+      debugPrint('[auth] restoreSession: no saved session');
+      return null;
+    }
 
     if (await _localStorage.isAccessTokenExpired()) {
+      debugPrint('[auth] restoreSession: token expired, refreshing...');
       final refreshToken = await _localStorage.getRefreshToken();
       if (refreshToken == null) {
         await _localStorage.clearSession();
@@ -56,7 +62,8 @@ class AuthRepository {
       try {
         final tokens = await _oauthClient.refresh(refreshToken);
         await _localStorage.saveTokens(tokens);
-      } catch (_) {
+      } catch (e) {
+        debugPrint('[auth] restoreSession: refresh failed: $e');
         await _localStorage.clearSession();
         return null;
       }
@@ -65,8 +72,12 @@ class AuthRepository {
     try {
       final officer = await fetchProfile();
       await _localStorage.saveOfficer(officer);
+      debugPrint(
+          '[auth] restoreSession completed in ${sw.elapsedMilliseconds}ms');
       return officer;
-    } catch (_) {
+    } catch (e) {
+      debugPrint(
+          '[auth] restoreSession: fetchProfile failed after ${sw.elapsedMilliseconds}ms: $e');
       return _localStorage.getSavedOfficer();
     }
   }

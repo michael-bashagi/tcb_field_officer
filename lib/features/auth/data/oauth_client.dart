@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 
@@ -65,12 +66,15 @@ class OAuthClient {
       if (e.code == 'CANCELED') {
         throw const OAuthException('Login was cancelled.');
       }
-      throw OAuthException(
-        '${e.message ?? 'Failed to open the sign-in page.'}\n\nRequest sent: $authorizeUri',
+      debugPrint('OAuth authorize failed: $e\nRequest sent: $authorizeUri');
+      throw const OAuthException(
+        'Could not open the sign-in page. Please check your connection and try again.',
       );
     } catch (e) {
-      throw OAuthException(
-          'Failed to open the sign-in page: $e\n\nRequest sent: $authorizeUri');
+      debugPrint('OAuth authorize failed: $e\nRequest sent: $authorizeUri');
+      throw const OAuthException(
+        'Could not open the sign-in page. Please check your connection and try again.',
+      );
     }
 
     final callbackUri = Uri.parse(result);
@@ -79,23 +83,24 @@ class OAuthClient {
     if (error != null) {
       final description =
           callbackUri.queryParameters['error_description'] ?? error;
-      throw OAuthException(
-        '$description\n\nRequest sent: $authorizeUri\n\nFull redirect: $result',
-      );
+      debugPrint(
+          'OAuth sign-in returned an error: $description\nFull redirect: $result');
+      throw const OAuthException(
+          'Sign-in could not be completed. Please try again.');
     }
 
     if (callbackUri.queryParameters['state'] != state) {
-      throw OAuthException(
-        'Login response failed security verification. Please try again.\n\n'
-        'Request sent: $authorizeUri\n\nFull redirect: $result',
+      debugPrint('OAuth state mismatch. Full redirect: $result');
+      throw const OAuthException(
+        'Login response failed security verification. Please try again.',
       );
     }
 
     final code = callbackUri.queryParameters['code'];
     if (code == null) {
-      throw OAuthException(
-        'Login did not return an authorization code.\n\n'
-        'Request sent: $authorizeUri\n\nFull redirect: $result',
+      debugPrint('OAuth redirect missing authorization code: $result');
+      throw const OAuthException(
+        'Sign-in could not be completed. Please try again.',
       );
     }
 
@@ -144,12 +149,13 @@ class OAuthClient {
       final data = e.response?.data;
       final message =
           (data is Map) ? (data['error_description'] ?? data['error']) : null;
+      debugPrint(
+          'OAuth token exchange failed: HTTP $status POST ${OAuthConfig.tokenUrl} '
+          'body=$formData response=$data');
       throw OAuthException(
-        '${message ?? 'Failed to sign in.'}\n\n'
-        'HTTP $status\n'
-        'POST ${OAuthConfig.tokenUrl}\n'
-        'Body sent: $formData\n'
-        'Response: $data',
+        message is String && message.isNotEmpty
+            ? message
+            : 'Failed to sign in. Please check your username and password and try again.',
       );
     }
   }

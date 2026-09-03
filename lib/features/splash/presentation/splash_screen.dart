@@ -21,6 +21,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   bool _readyToNavigate = false;
   SplashDestination? _pendingDestination;
+  bool _hasError = false;
 
   @override
   void initState() {
@@ -73,6 +74,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         _pendingDestination = destination;
         _navigateIfReady();
       });
+      if (next.hasError) {
+        setState(() => _hasError = true);
+      }
     });
 
     return Scaffold(
@@ -134,6 +138,26 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                         letterSpacing: 0.5,
                       ),
                     ),
+                    if (_hasError) ...[
+                      const SizedBox(height: 32),
+                      const Text(
+                        'Something went wrong while starting the app.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                      const SizedBox(height: 16),
+                      OutlinedButton(
+                        onPressed: () {
+                          setState(() => _hasError = false);
+                          ref.read(splashControllerProvider.notifier).retry();
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          side: const BorderSide(color: Colors.white),
+                        ),
+                        child: const Text('Try Again'),
+                      ),
+                    ],
                   ],
                 ),
               ),
